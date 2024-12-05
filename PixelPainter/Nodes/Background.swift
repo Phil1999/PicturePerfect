@@ -6,6 +6,7 @@ class Background: SKNode {
     private var fogEffect: SKSpriteNode!
     private var victoryGlow: SKSpriteNode!
     private var screenSize: CGSize = .zero
+    private var warningOverlay: SKSpriteNode!
 
     override init() {
         super.init()
@@ -24,9 +25,69 @@ class Background: SKNode {
 extension Background {
     private func setupLayers() {
         setupGradient()
+        setupWarningOverlay()
         setupMainBackground()
         setupVictoryGlow()
         setupFog()
+
+    }
+    
+    func fadeOutWarningOverlay(completion: @escaping () -> Void) {
+        let fadeOut = SKAction.fadeOut(withDuration: 0.6)
+        warningOverlay.run(fadeOut, completion: completion)
+    }
+    
+    private func setupWarningOverlay() {
+        warningOverlay = SKSpriteNode(color: .clear, size: screenSize)
+        warningOverlay.position = CGPoint(x: screenSize.width / 2, y: screenSize.height / 2)
+        warningOverlay.zPosition = -1.5  // Between background and fog
+        warningOverlay.alpha = 0
+        addChild(warningOverlay)
+    }
+
+    func updateWarningLevel(timeRemaining: Double) {
+       let warningThreshold = 8.0
+       
+       if timeRemaining <= warningThreshold {
+           let intensity = 1 - (timeRemaining / warningThreshold)
+           warningOverlay.removeAllActions()
+           
+           let gradientTexture = createWarningGradient(intensity: intensity)
+           warningOverlay.texture = gradientTexture
+           warningOverlay.alpha = 1
+           
+           // Fade out fog as warning increases
+           if let fogEffect = self.fogEffect {
+               fogEffect.alpha = timeRemaining <= 1.0 ? 0 : 0.8 * (timeRemaining / warningThreshold)
+           }
+       } else {
+           warningOverlay.alpha = 0
+           fogEffect?.alpha = 0.8 // Reset fog to original alpha
+       }
+    }
+    
+    private func createWarningGradient(intensity: CGFloat) -> SKTexture {
+       let gradientLayer = CAGradientLayer()
+       gradientLayer.frame = CGRect(origin: .zero, size: screenSize)
+       
+       // Create colors with smooth intensity transition
+        let topColor = UIColor(hex: "FF2E32").withAlphaComponent(pow(intensity, 2) * 0.8)
+        let midColor = UIColor(hex: "300001").withAlphaComponent(pow(intensity, 2) * 0.8)
+        let bottomColor = UIColor(hex: "171717").withAlphaComponent(pow(intensity, 2) * 0.8)
+       
+       gradientLayer.colors = [topColor.cgColor, midColor.cgColor, bottomColor.cgColor]
+       gradientLayer.locations = [0.0, 0.5, 1.0]
+       
+       let scale = UIScreen.main.scale
+       UIGraphicsBeginImageContextWithOptions(screenSize, false, scale)
+       if let context = UIGraphicsGetCurrentContext() {
+           gradientLayer.render(in: context)
+           let image = UIGraphicsGetImageFromCurrentImageContext()
+           UIGraphicsEndImageContext()
+           return SKTexture(image: image!)
+       }
+       UIGraphicsEndImageContext()
+       return SKTexture()
     }
 
     private func setupGradient() {
@@ -34,8 +95,8 @@ extension Background {
             width: screenSize.width, height: screenSize.height)
         gradientLayer = SKSpriteNode(color: .white, size: gradientSize)
 
-        let topColor = UIColor(hex: "BAB3B9")
-        let bottomColor = UIColor(hex: "171717")
+        let topColor = UIColor(hex: "4b4b4b") // Originially BAB3B9
+        let bottomColor = UIColor(hex: "030303") // Originally 171717
         let gradientTexture = createGradientTexture(
             colors: [topColor, bottomColor], size: gradientSize)
 
@@ -62,6 +123,9 @@ extension Background {
         mainBackground.position = CGPoint(
             x: screenSize.width / 2 + xOffset, y: screenSize.height / 2)
         mainBackground.zPosition = -2
+        
+        mainBackground.alpha = 1
+        
         addChild(mainBackground)
     }
     

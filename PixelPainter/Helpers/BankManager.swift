@@ -23,7 +23,7 @@ class BankManager {
         bankNode = SKSpriteNode(color: bankColor, size: CGSize(width: bankWidth, height: bankHeight))
         
         // Moved the bank position up by increasing the y value
-        bankNode?.position = CGPoint(x: gameScene.size.width / 2, y: bankHeight/2)
+        bankNode?.position = CGPoint(x: gameScene.size.width / 2, y: gameScene.size.height * 0.12)
         bankNode?.name = "bank"
         gameScene.addChild(bankNode!)
         

@@ -22,7 +22,7 @@ class PowerUpManager {
         let powerUpTypes = Array(powerUpUses.keys)
         let totalWidth = CGFloat(powerUpTypes.count - 1) * spacing
         let startX = centerX - (totalWidth / 2)
-        let yPosition: CGFloat = 210 + 40
+        let yPosition: CGFloat = gameScene.size.height * 0.28
 
         for (index, type) in powerUpTypes.enumerated() {
             let uses = powerUpUses[type] ?? 0

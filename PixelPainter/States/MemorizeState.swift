@@ -200,7 +200,8 @@ class MemorizeState: GKState {
         levelLabel.fontSize = 36
         levelLabel.fontColor = .white
         levelLabel.position = CGPoint(
-            x: gameScene.size.width / 2, y: gameScene.size.height - 100)
+            x: gameScene.size.width / 2,
+            y: gameScene.size.height * 0.87)
         levelLabel.name = "levelLabel"
         gameScene.addChild(levelLabel)
 
@@ -209,7 +210,9 @@ class MemorizeState: GKState {
             let scoreCounter = ScoreCounter(
                 text: "\(gameScene.context.gameInfo.score)")
             scoreCounter.position = CGPoint(
-                x: gameScene.size.width / 6, y: gameScene.size.height - 90)
+                x: gameScene.size.width / 6,
+                y: gameScene.size.height * 0.9
+            )
             gameScene.addChild(scoreCounter)
             
             // add "choose two" label every round for consistency
@@ -218,7 +221,7 @@ class MemorizeState: GKState {
             chooseLabel.fontSize = 32
             chooseLabel.position = CGPoint(
                 x: gameScene.size.width / 2,
-                y: gameScene.size.height / 2 - 200
+                y: gameScene.size.height * 0.27
             )
             self.chooseTwoLabel = chooseLabel
             gameScene.addChild(chooseLabel)
@@ -229,7 +232,7 @@ class MemorizeState: GKState {
             chooseLabel.fontSize = 32
             chooseLabel.position = CGPoint(
                 x: gameScene.size.width / 2,
-                y: gameScene.size.height / 2 - 200
+                y: gameScene.size.height * 0.27
             )
             self.chooseTwoLabel = chooseLabel
             gameScene.addChild(chooseLabel)
@@ -240,7 +243,8 @@ class MemorizeState: GKState {
         readyLabel.fontSize = 48
         readyLabel.fontColor = .white
         readyLabel.position = CGPoint(
-            x: gameScene.size.width / 2, y: gameScene.size.height - 180)
+            x: gameScene.size.width / 2,
+            y: gameScene.size.height * 0.78)
         readyLabel.name = "readyLabel"
         readyLabel.alpha = 0  // Start hidden
         gameScene.addChild(readyLabel)
@@ -451,7 +455,7 @@ extension MemorizeState {
                 type: type, uses: type.uses, minimal: true)
             icon.position = CGPoint(
                 x: startX + CGFloat(index) * spacing,
-                y: gameScene.size.height / 2 - 260
+                y: gameScene.size.height * 0.20
             )
             icon.alpha = 0.5
             gameScene.addChild(icon)
@@ -520,7 +524,7 @@ extension MemorizeState {
         // Position below power-up icons
         button.position = CGPoint(
             x: gameScene.size.width / 2,
-            y: gameScene.size.height / 2 - 350  // Below the power-up icons
+            y: gameScene.size.height * 0.10  // Below the power-up icons
         )
         button.name = "confirm_button"
 
